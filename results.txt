@@ -1,0 +1,42 @@
+M.Tech Project: Hybrid MPI Compression Results
+Date: Sun Mar 22 07:20:35 PM IST 2026
+------------------------------------------------
+METHOD: BASELINE (RAW MPI)
+Rank 0 starting Allreduce...
+Rank 1 starting Allreduce...
+Rank 2 starting Allreduce...
+
+--- [METHOD: BASELINE (RAW)] ---
+Time: 22558.9 us
+Network Load: 24576 bytes
+Accuracy: 100.00%
+--------------------------------
+
+Result of first element: 6 (Expected sum of ranks)
+------------------------------------------------
+METHOD: LOSSLESS COMPRESSION
+Rank 0 starting Allreduce...
+Rank 2 starting Allreduce...
+Rank 1 starting Allreduce...
+
+--- [METHOD: LOSSLESS COMPRESSION] ---
+Time: 13021.2 us
+Network Load: 237 bytes (Saved 24339)
+Accuracy: 100.0000%
+------------------------------------------
+
+Result of first element: 6.0000 (Expected sum of ranks)
+------------------------------------------------
+METHOD: LOSSY COMPRESSION
+Rank 0 starting Allreduce...
+Rank 1 starting Allreduce...
+Rank 2 starting Allreduce...
+
+--- [METHOD: LOSSY COMPRESSION] ---
+Time: 13452.9 us
+Network Load: 237 bytes (Saved 24339)
+Accuracy: 99.9900%
+------------------------------------------
+
+Result of first element: 6.0000 (Expected sum of ranks)
+------------------------------------------------

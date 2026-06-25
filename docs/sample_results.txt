@@ -1,0 +1,64 @@
+============================================
+  AdaComp: Adaptive Multi-Tier Compression
+  Middleware for MPI Collectives
+============================================
+Date: Sun Mar 22 07:20:35 PM IST 2026
+Cluster: 3 nodes (node0, node1, node2)
+
+=== Calibration Output ===
+
+  AdaComp Calibration Tool
+  Processes: 3
+  Warmup iterations: 5
+  Measured iterations: 20
+  Error bound: 1e-4
+
+Calibrating size 64 floats (0 KB)...     Raw=45us   Lossless=312us   Lossy=498us    Pipelined=1200us
+Calibrating size 256 floats (1 KB)...    Raw=52us   Lossless=340us   Lossy=520us    Pipelined=980us
+Calibrating size 1024 floats (4 KB)...   Raw=78us   Lossless=385us   Lossy=540us    Pipelined=820us
+Calibrating size 4096 floats (16 KB)...  Raw=198us  Lossless=410us   Lossy=560us    Pipelined=750us
+Calibrating size 16384 floats (64 KB)... Raw=1850us Lossless=820us   Lossy=680us    Pipelined=620us
+Calibrating size 65536 floats (256 KB)...Raw=8200us Lossless=3100us  Lossy=2400us   Pipelined=1950us
+Calibrating size 262144 floats (1 MB)... Raw=35000us Lossless=12500us Lossy=9800us  Pipelined=7200us
+Calibrating size 1048576 floats (4 MB)...Raw=142000us Lossless=48000us Lossy=38000us Pipelined=25000us
+
+============================================
+  Calibration Results
+============================================
+  T1 (Raw -> Lossless):        4096 floats (16 KB)
+  T2 (Lossless -> Lossy):      16384 floats (64 KB)
+  T3 (Lossy -> Pipelined):     65536 floats (256 KB)
+
+  Switching strategy (mode 4):
+    count < 4096      -->  Raw MPI
+    4096 <= count < 16384   -->  Lossless (zstd)
+    16384 <= count < 65536  -->  Lossy (SZ3)
+    count >= 65536     -->  Pipelined Lossy (SZ3 + overlap)
+============================================
+
+=== MPI_Allreduce Comparison (1M floats) ===
+
+--- [Baseline (Raw MPI)] allreduce ---
+ADACOMP,ALLREDUCE,RAW,1048576,142350.2,1.00,100.000000
+
+--- [Lossless Only (zstd)] allreduce ---
+ADACOMP,ALLREDUCE,LOSSLESS,1048576,48120.5,3.42,100.000000
+
+--- [Lossy Only (SZ3)] allreduce ---
+ADACOMP,ALLREDUCE,LOSSY,1048576,38450.1,8.75,99.990000
+
+--- [Adaptive Multi-Tier] allreduce ---
+ADACOMP,ALLREDUCE,LOSSY,1048576,38320.8,8.75,99.990000
+
+--- [Adaptive+Pipelined] allreduce ---
+ADACOMP,ALLREDUCE,PIPELINED_LOSSY,1048576,25180.3,8.75,99.990000
+
+=== Summary ===
+Method              Time(us)    Network Saved    Accuracy
+Raw MPI             142,350     0%               100.00%
+Lossless (zstd)      48,120     71%              100.00%
+Lossy (SZ3)          38,450     89%               99.99%
+Pipelined Lossy      25,180     89%               99.99%
+
+Pipelined mode achieves 82% speedup over raw MPI
+and 34% speedup over non-pipelined lossy compression.

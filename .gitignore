@@ -1,0 +1,33 @@
+# Build artifacts
+*.so
+*.o
+*.a
+test_mpi
+test_adacomp
+calibrate_adacomp
+
+# Libraries (too large for git — build from source)
+SZ3/
+zstd/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+
+# Generated data (re-create with scripts)
+scale_results.csv
+adacomp_scale_results.csv
+calibration_results.csv
+adacomp.conf
+adacomp_results.txt
+
+# OS files
+.DS_Store
+Thumbs.db
